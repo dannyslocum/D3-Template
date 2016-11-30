@@ -1,7 +1,18 @@
+# Create a basemap which connects the relationships of multiple people based on their locations
+#-----------------------------------------------------------------------------------------------
+# to-do
+	# add thickness to the mapped line when there are multiple connections being made
+	# print the data point values (persons name) when a location is hovered over?
+	# create a GUI which allows the user to filter based on a specific data point value
+		# dataset will filter for that value and rerun the mapping based on the new list
+		# auto-zoom to that region?
+			
 import numpy as np
 import matplotlib.pyplot as plt
 import csv as csv
 from mpl_toolkits.basemap import Basemap
+
+#---CREATE BASEMAP-------------------------------------------------------------------------------
 
 # create new figure, axes instances.
 fig=plt.figure()
@@ -12,23 +23,8 @@ map = Basemap(llcrnrlon=-100.,llcrnrlat=20.,urcrnrlon=20.,urcrnrlat=60.,\
             rsphere=(6378137.00,6356752.3142),\
             resolution='l',projection='merc',\
             lat_0=40.,lon_0=-20.,lat_ts=20.)
-
-# lat/lon of New York and London
-# have an import file with [location name, lat, lon]
-# import as csv, read into a table
-nylat = 40.78; nylon = -73.98
-lonlat = 51.53; lonlon = 0.08
-
-# draw great circle route between NY and London
-# have an import file with [Entity x, Entity y]
-# import as csv, read into a table
-# read through row by row, find entity listed in lat/lon import
-# save those values as lat(x), lon(x). Repeat for lat(y), lon(y)
-# ability to filter on one Entity and remake the map
-	# search through column x, print with color blue?
-	# search through column y, print with color red?
-	# or give an option for the color (maybe all one)
-map.drawgreatcircle(nylon,nylat,lonlon,lonlat,linewidth=1,color='b')
+# add title	    
+ax.set_title('Connection Test')
 
 # add map colors
 map.fillcontinents(color='coral',lake_color='aqua')
@@ -38,10 +34,178 @@ map.drawmapboundary(fill_color='aqua')
 map.drawparallels(np.arange(10,90,20),labels=[1,1,0,1])
 map.drawmeridians(np.arange(-180,180,30),labels=[1,1,0,1])
 
-ax.set_title('Connection Test')
-plt.show()
+#---IMPORT COORDINATES DATA-----------------------------------------------------------------
 
-# still needed
-	# print values under the location
-	# weight the thickness of the line?
-	# auto zoom in-out based on the filter locations?
+# import a file with [city,lat, lon]
+
+cords = np.array( 	[athens,37,23],
+			[barcelona,41,2],
+			[berlin,52,13],
+			[boston,42,71],
+			[dc,38,77],
+			[dubai,25,55],
+			[hong kong,22,114],
+			[london,51,0],
+			[nyc,40,73],
+			[san diego,32,117]
+		)
+
+cities = []
+citiesLat = []
+citiesLong = []
+
+# import as csv, read into a table
+/* cords.next() <-- check this issues for the header line
+for row in cords:
+	city = row[0]
+	lat = row[1]
+	long = row[2]
+	
+	cities.append(city)
+	citiesLat.append(lat)
+	citiesLong.append(long)
+*/
+
+num_rows = np.shape(cords)[0]
+for i in range(0,num_rows+1)
+	city = cords[i,0]
+	lat = cords[i,1]
+	long = cords[i,2]
+
+	cities.append(city)
+	citiesLat.append(lat)
+	citiesLong.append(long)
+
+#---IMPORT MAPPING DATA-----------------------------------------------------------------
+
+# have an import file with [entity x, city x, entity y, city y]
+# read through row by row, find entity listed in lat/lon import
+# save those values as lat(x), lon(x). Repeat for lat(y), lon(y)
+# ability to filter on one Entity and remake the map
+	# search through column x, print with color blue?
+	# search through column y, print with color red?
+	# or give an option for the color (maybe all one)
+
+data = np.array(	[bob,nyc,jessie,barcelona],
+			[bob,nyc,richie,athens],
+			[bob,nyc,lisa,berlin],
+			[danny,san diego,jessie,barcelona],
+			[danny,san diego,richie,athens],
+			[danny,san diego,jim,dc],
+			[danny,san diego,megan,dubai],
+			[danny,san diego,joe,hong kong],
+			[danny,san diego,bob,nyc],
+			[emily,london,jessie,barcelona],
+			[emily,london,richie,athens],
+			[emily,london,lisa,berlin],
+			[emily,london,danny,san diego],
+			[greg,boston,jessie,barcelona],
+			[greg,boston,richie,athens],
+			[greg,boston,lisa,berlin],
+			[greg,boston,jim,dc],
+			[greg,boston,megan,dubai],
+			[greg,boston,joe,hong kong],
+			[greg,boston,emily,london],
+			[greg,boston,bob,nyc],
+			[greg,boston,danny,san diego],
+			[jessie,barcelona,richie,athens],
+			[jessie,barcelona,lisa,berlin],
+			[jessie,barcelona,greg,boston],
+			[jessie,barcelona,emily,london],
+			[jessie,barcelona,bob,nyc],
+			[jessie,barcelona,danny,san diego],
+			[jim,dc,joe,hong kong],
+			[jim,dc,emily,london],
+			[jim,dc,bob,nyc],
+			[jim,dc,danny,san diego],
+			[joe,hong kong,richie,athens],
+			[joe,hong kong,lisa,berlin],
+			[joe,hong kong,greg,boston],
+			[joe,hong kong,emily,london],
+			[lisa,berlin,greg,boston],
+			[lisa,berlin,emily,london],
+			[lisa,berlin,bob,nyc],
+			[lisa,berlin,danny,san diego],
+			[megan,dubai,jessie,barcelona],
+			[megan,dubai,joe,hong kong],
+			[megan,dubai,emily,london],
+			[megan,dubai,danny,san diego],
+			[richie,athens,jessie,barcelona],
+			[richie,athens,jim,dc],
+			[richie,athens,megan,dubai],
+			[richie,athens,joe,hong kong],
+			[richie,athens,emily,london],
+			[richie,athens,danny,san diego]
+		)
+		
+persons1 = []
+cities1 = []
+cities1Lat = []
+cities1Long = []
+persons2 = []
+cities2 = []
+cities2Lat = []
+cities2Long = []
+
+# import as csv, read into a table
+/* data.next()  <-- check this issues for the header line
+for row in data:
+	person1 = row[0]
+	city1 = row[1]
+	person2 = row[2]
+	city2 = row[3]
+	
+	cityidx1 = cities.index(city1.lower())
+	lat1 = citiesLat[cityidx1]
+	long1 = citiesLong[cityidx1]
+	
+	cityidx2 = cities.index(city2.lower())
+	lat2 = citiesLat[cityidx2]
+	long2 = citiesLong[cityidx2]
+	
+	persons1.append(person1)
+	cities1.append(city1)
+	cities1Lat.append(lat1)
+	cities1Long.append(long1)
+	persons2.append(person2)
+	cities2.append(city2)
+	cities2Lat.append(lat2)
+	cities2Long.append(long2)
+*/
+
+num_rows = np.shape(data)[0]
+
+for i in range(0,num_rows+1)
+	person1 = data[i,0]
+	city1 = data[i,1]
+	person2 = data[i,2]
+	city2 = data[i,3]
+	
+	cityidx1 = cities.index(city1.lower())
+	lat1 = citiesLat[cityidx1]
+	long1 = citiesLong[cityidx1]
+	
+	cityidx2 = cities.index(city2.lower())
+	lat2 = citiesLat[cityidx2]
+	long2 = citiesLong[cityidx2]
+	
+	persons1.append(person1)
+	cities1.append(city1)
+	cities1Lat.append(lat1)
+	cities1Long.append(long1)
+	persons2.append(person2)
+	cities2.append(city2)
+	cities2Lat.append(lat2)
+	cities2Long.append(long2)
+
+#---MAP THE DATA------------------------------------------------------------------------
+
+# draw great circle route between each of the connections
+map.drawgreatcircle(cities1Long,cities1Lat,cities2Long,cities2Lat,linewidth=1,color='b')
+
+# place a marker at each of the city locations
+map.scatter(citiesLon,citiesLat,2,marker='o',color='k')
+
+#---Plot THE DATA-----------------------------------------------------------------------
+
+plt.show()
