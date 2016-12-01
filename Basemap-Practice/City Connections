@@ -20,10 +20,7 @@ fig = plt.figure()
 ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 
 # setup mercator map projection.
-map = Basemap(llcrnrlon=-100., llcrnrlat=20., urcrnrlon=20., urcrnrlat=60., \
-              rsphere=(6378137.00, 6356752.3142), \
-              resolution='l', projection='merc', \
-              lat_0=40., lon_0=-20., lat_ts=20.)
+map = Basemap(projection='mill',lon_0=0)
 # add title
 ax.set_title('Connection Test')
 
@@ -32,14 +29,14 @@ map.fillcontinents(color='coral', lake_color='aqua')
 map.drawmapboundary(fill_color='aqua')
 
 # draw parallels and maridians
-map.drawparallels(np.arange(10, 90, 20), labels=[1, 1, 0, 1])
-map.drawmeridians(np.arange(-180, 180, 30), labels=[1, 1, 0, 1])
+map.drawparallels(np.arange(-90, 90, 30), labels=[1, 1, 0, 1])
+map.drawmeridians(np.arange(-180, 180, 60), labels=[1, 1, 0, 1])
 
 # ---IMPORT COORDINATES DATA-----------------------------------------------------------------
 
 # import a file with [city,lat, lon]
 
-cords = np.array(['athens', 37, 23],
+cords = np.array([['athens', 37, 23],
                  ['barcelona', 41, 2],
                  ['berlin', 52, 13],
                  ['boston', 42, 71],
@@ -48,8 +45,7 @@ cords = np.array(['athens', 37, 23],
                  ['hong kong', 22, 114],
                  ['london', 51, 0],
                  ['nyc', 40, 73],
-                 ['san diego', 32, 117]
-                 )
+                 ['san diego', 32, 117]])
 
 cities = []
 citiesLat = []
@@ -85,7 +81,7 @@ for i in range(0, 10):
     # search through column y, print with color red?
     # or give an option for the color (maybe all one)
 
-data = np.array(['bob', 'nyc', 'jessie', 'barcelona'],
+data = np.array([['bob', 'nyc', 'jessie', 'barcelona'],
                 ['bob', 'nyc', 'richie', 'athens'],
                 ['bob', 'nyc', 'lisa', 'berlin'],
                 ['danny', 'san diego', 'jessie', 'barcelona'],
@@ -134,8 +130,7 @@ data = np.array(['bob', 'nyc', 'jessie', 'barcelona'],
                 ['richie', 'athens', 'megan', 'dubai'],
                 ['richie', 'athens', 'joe', 'hong kong'],
                 ['richie', 'athens', 'emily', 'london'],
-                ['richie', 'athens', 'danny', 'san diego']
-                )
+                ['richie', 'athens', 'danny', 'san diego']])
 
 persons1 = []
 cities1 = []
