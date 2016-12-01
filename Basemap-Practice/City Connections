@@ -189,15 +189,30 @@ for i in range(0, 50):
     cities2Lat.append(lat2)
     cities2Long.append(long2)
 
+# ---MAKE STRING ARRAY INTO FLOAT ARRAY-----------------------------------
+
+for i in range(len(citiesLat)):
+    citiesLat[i] = float(citiesLat[i])
+for i in range(len(cities1Lat)):
+    cities1Lat[i] = float(cities1Lat[i])
+for i in range(len(cities2Lat)):
+    cities2Lat[i] = float(cities2Lat[i])
+for i in range(len(citiesLong)):
+    citiesLong[i] = float(citiesLong[i])
+for i in range(len(cities1Long)):
+    cities1Long[i] = float(cities1Long[i])
+for i in range(len(cities2Long)):
+    cities2Long[i] = float(cities2Long[i])
+
 # ---MAP THE DATA------------------------------------------------------------------------
 
 # draw great circle route between each of the connections
-x1, y1 = map(cities1Long, cities1Lat)
-x2, y2 = map(cities2Long, cities2Lat)
-map.drawgreatcircle(x1, y1, x2, y2, linewidth=2, color='b')
+# x1, y1 = map(cities1Long, cities1Lat)
+# x2, y2 = map(cities2Long, cities2Lat)
+# map.drawgreatcircle(x1, y1, x2, y2, linewidth=2, color='b')
 
-x, y = map(citiesLong, citiesLat)
 # place a marker at each of the city locations
+x, y = map(citiesLong, citiesLat)
 map.scatter(x, y, 10, marker='o', color='r')
 
 # ---Plot THE DATA-----------------------------------------------------------------------
