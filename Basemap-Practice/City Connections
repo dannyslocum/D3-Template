@@ -25,7 +25,7 @@ map = Basemap(projection='mill',lon_0=0)
 ax.set_title('Connection Test')
 
 # add map colors
-map.fillcontinents(color='coral', lake_color='aqua')
+map.fillcontinents(lake_color='aqua') #color='coral',
 map.drawmapboundary(fill_color='aqua')
 
 # draw parallels and maridians
@@ -37,15 +37,15 @@ map.drawmeridians(np.arange(-180, 180, 60), labels=[1, 1, 0, 1])
 # import a file with [city,lat, lon]
 
 cords = np.array([['athens', 37, 23],
-                 ['barcelona', 41, 2],
-                 ['berlin', 52, 13],
-                 ['boston', 42, 71],
-                 ['dc', 38, 77],
-                 ['dubai', 25, 55],
-                 ['hong kong', 22, 114],
-                 ['london', 51, 0],
-                 ['nyc', 40, 73],
-                 ['san diego', 32, 117]])
+         ['barcelona', 41, 2],
+         ['berlin', 52, 13],
+         ['boston', 42, -71],
+         ['dc', 38, -77],
+         ['dubai', 25, 55],
+         ['hong kong', 22, 114],
+         ['london', 51, 0],
+         ['nyc', 40, -73],
+         ['san diego', 32, -117]])
 
 cities = []
 citiesLat = []
@@ -63,9 +63,9 @@ citiesLong = []
 #     citiesLong.append(long)
 
 for i in range(0, 10):
-    city = cords[i, 0]
-    lat = cords[i, 1]
-    long = cords[i, 2]
+    city = cords[i][0]
+    lat = cords[i][1]
+    long = cords[i][2]
 
     cities.append(city)
     citiesLat.append(lat)
@@ -110,7 +110,7 @@ data = np.array([['bob', 'nyc', 'jessie', 'barcelona'],
                 ['jessie', 'barcelona', 'bob', 'nyc'],
                 ['jessie', 'barcelona', 'danny', 'san diego'],
                 ['jim', 'dc', 'joe', 'hong kong'],
-                ['jim', 'dc', 'emily', 'london'],
+                ['jim', 'dc', 'emx = ily', 'london'],
                 ['jim', 'dc', 'bob', 'nyc'],
                 ['jim', 'dc', 'danny', 'san diego'],
                 ['joe', 'hong kong', 'richie', 'athens'],
@@ -167,10 +167,10 @@ cities2Long = []
 #     cities2Long.append(long2)
 
 for i in range(0, 50):
-    person1 = data[i, 0]
-    city1 = data[i, 1]
-    person2 = data[i, 2]
-    city2 = data[i, 3]
+    person1 = data[i][0]
+    city1 = data[i][1]
+    person2 = data[i][2]
+    city2 = data[i][3]
 
     cityidx1 = cities.index(city1.lower())
     lat1 = citiesLat[cityidx1]
@@ -192,10 +192,13 @@ for i in range(0, 50):
 # ---MAP THE DATA------------------------------------------------------------------------
 
 # draw great circle route between each of the connections
-map.drawgreatcircle(cities1Long, cities1Lat, cities2Long, cities2Lat, linewidth=1, color='b')
+x1, y1 = map(cities1Long, cities1Lat)
+x2, y2 = map(cities2Long, cities2Lat)
+map.drawgreatcircle(x1, y1, x2, y2, linewidth=2, color='b')
 
+x, y = map(citiesLong, citiesLat)
 # place a marker at each of the city locations
-map.scatter(citiesLong, citiesLat, 2, marker='o', color='k')
+map.scatter(x, y, 10, marker='o', color='r')
 
 # ---Plot THE DATA-----------------------------------------------------------------------
 
