@@ -14,48 +14,60 @@
  
 // create sample dataset
 var sample_data = [
-    {"name": "alpha", "size": 10},
-    {"name": "beta", "size": 12},
-    {"name": "gamma", "size": 30},
-    {"name": "delta", "size": 26},
-    {"name": "epsilon", "size": 12},
-    {"name": "zeta", "size": 26},
-    {"name": "theta", "size": 11},
-    {"name": "eta", "size": 24}
+    {"name": "Capability 1", "size": 30},
+    {"name": "Capability 2", "size": 20},
+    {"name": "Service 1", "size": 15},
+    {"name": "Service 2", "size": 10},
+    {"name": "Service 3", "size": 10},
+    {"name": "Service 4", "size": 15},
+    {"name": "Service 5", "size": 10},    
+    {"name": "System 1", "size": 4},
+    {"name": "System 2", "size": 7},
+    {"name": "System 3", "size": 4},
+    {"name": "System 4", "size": 7},
 ]
 
 // create list of node positions
-var positions = [
-    {"name": "alpha", "x": 10, "y": 15},
-    {"name": "beta", "x": 12, "y": 24},
-    {"name": "gamma", "x": 16, "y": 18},
-    {"name": "delta", "x": 26, "y": 21},
-    {"name": "epsilon", "x": 13, "y": 4},
-    {"name": "zeta", "x": 31, "y": 13},
-    {"name": "theta", "x": 19, "y": 8},
-    {"name": "eta", "x": 24, "y": 11}
-]
+// var positions = [
+//    {"name": "Capability 1", "x": 10, "y": 8},
+//    {"name": "Capability 2", "x": 20, "y": 8},
+//    {"name": "Service 1", "x": 5, "y": 16},
+//    {"name": "Service 2", "x": 10, "y": 16},
+//    {"name": "Service 3", "x": 15, "y": 16},
+//    {"name": "Service 4", "x": 20, "y": 16},
+//    {"name": "Service 5", "x": 25, "y": 16},
+//    {"name": "System 1", "x": 7, "y": 24},
+//    {"name": "System 2", "x": 12, "y": 24},
+//    {"name": "System 3", "x": 17, "y": 24},
+//    {"name": "System 4", "x": 22, "y": 24},
+//]
 
 // create list of node connections
 var connections = [
-    {"source": "alpha", "target": "beta"},
-    {"source": "alpha", "target": "gamma"},
-    {"source": "beta", "target": "delta"},
-    {"source": "beta", "target": "epsilon"},
-    {"source": "zeta", "target": "gamma"},
-    {"source": "theta", "target": "gamma"},
-    {"source": "eta", "target": "gamma"}
-]
-
+    {"source": "Capability 1", "target": "Service 1"},
+    {"source": "Capability 1", "target": "Service 2"},
+    {"source": "Capability 1", "target": "Service 3"},
+    {"source": "Capability 1", "target": "Service 4"},
+    {"source": "Capability 2", "target": "Service 4"},
+    {"source": "Capability 2", "target": "Service 5"},
+    {"source": "Service 1", "target": "System 1"},
+    {"source": "Service 1", "target": "System 2"},
+    {"source": "Service 2", "target": "System 2"},
+    {"source": "Service 3", "target": "System 3"},
+    {"source": "Service 4", "target": "System 4"},
+    {"source": "Service 5", "target": "System 4"}
+]    
+    
 // instantiate d3plus
 var visualization = d3plus.viz()
-    .container("#viz")  // container DIV to hold the visualization
-    .type("network")    // visualization type
-    .data(sample_data)  // sample dataset to attach to nodes
-    .nodes(positions)   // x and y position of nodes
-    .edges(connections) // list of node connections
-    .size("size")       // key to size the nodes
-    .id("name")         // key for which our data is unique on
-    .draw()             // finally, draw the visualization!
+    .container("#viz")         // container DIV to hold the visualization
+    .type("network")           // visualization type
+    .data(sample_data)         // sample dataset to attach to nodes
+//    .nodes(positions)          // x and y position of nodes
+    .edges(connections)        // list of node connections
+    .edges({"arrows": true})   // node connections to arrows
+    .size("size")              // key to size the nodes
+    .id("name")                // key for which our data is unique on
+    .draw()                    // finally, draw the visualization!
 
 </script>
