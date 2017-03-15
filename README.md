@@ -1,1 +1,1 @@
-# Python-Visualization-Practice
+# Visualization-Practice
