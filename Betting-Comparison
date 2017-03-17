@@ -26,3 +26,6 @@
 // Previous games played against each other
   // Outcome
   // Betting lines for that game
+
+// Previous outcomes vs betting lines
+  // Bar (w/ negative) showing how it fared compared to the betting lines
