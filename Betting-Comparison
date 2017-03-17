@@ -1,0 +1,24 @@
+// Compare two teams
+
+
+// Standings (win/loss/tie)
+  //Stacked Bar chart with standings
+    // Wins (by 1 goal, by 2 goal, by 3 goal +)
+    // Loses (by 1 goal, by 2 goal, by 3 goal +)
+    // Ties
+  // Home vs. Away
+  // Adjusted standings?
+
+// Goals per game
+  // Compressed Bar Chart goals per game
+  // Goals per game (home vs away)
+  // Adjusted goals per game
+
+// Injured Players
+  // Starter?
+  // Star Player?
+  // Impact of player absense
+    // Player impact
+      // Impact of player vs opponent (previous year)
+    // Quality of backup
+    // Previous data of impact without player in the game
