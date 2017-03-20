@@ -1,26 +1,129 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible"	content="IE=edge">
+<title>Tab Title</title>
 <style>
-	body {
-		overflow:hidden;
-		margin:0;
+	.link {
+		fill: none;
+		stroke: #666;
+		stroke-width: 1.5px;
+	}
+	circle {
+		fill: #ccc;
+		stroke: #333;
+		stroke-width: 1.5px;
 	}
 	text {
-		font-family: sans-serif;
-		pointer-events: none;
+		font: 12px sans-serif;
+		pointer-events: none;se
+		text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+	}
+	.path:hover {
+		stroke-opacity: 0.65 !important;	
 	}
 </style>
 
-<body>
-
+<body bgcolor="#666">
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<div id="forceLayout"></div>
+<h1 style="margin-top: 20px; margin-bottom: 10px; margin-left: 10px; width: 96px; color: white; background: #666">
+	<b>Title</b>
+</h1>
+<button id="searchButton"	onclick=buttonSearch()	style="float: left; margin-left: 5px; margin-top: 5px; background: Azure">
+	Click to expand features
+</button>
+<button id="interactiveButton"	onclick=interactiveSearch()	style="float: left; margin-left: 5px; margin-top: 5px; margin-right: 60%; background: Azure">
+	Click for interactive details
+</button>
+<fieldset	id="interactiveField"	hidden="true"	style="width: 96%; left: 2px; overflow: auto; background: white;">
+	<p>Add interactive details<p>
+</fieldset>
+<fieldset	id="infoField"	hidden="true"	style="width: 96%; left: 2px; overflow: auto; background: white;">
+	<p>Add search features</p>
+</fieldset>
+<div id="forceLayout"	style="margin: 10px; margin-left: 20px; float: left; border: solid; background: #333"></div>
+<div id="legendField"	style="position: fixed; bottom: 10px; right: 10px; margin-bottom: 2px; margin-right: 2px; background: white; border: solid; ">
+	<b> Legend </b>
+	<br>
+</div>
+<button id="legendButton"	onclick=hideLegend()	style="position: fixed; bottom: 5px; right: 12px; background: DarkSeaGreen">
+	Hide Legend
+</button>
 <script>
 
-var csv_file = "_Force-Directed_March-Madness.csv";
-var w = window.innerWidth;
-var h = window.innerHeight;
+var csv_force = "_Force-Directed_March-Madness.csv";
+var width = window.innerWidth;
+var height = window.innerHeight;
+var data = {"nodes": [], "links": []};
+	
+var svg_force = d3.select("forceLayout")
+	.append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.attr("id", "forceSVG")
+	.append("g")
+		.attr("transform", "translate(" + 30 + "," + 20 + ")");
 
+var color = d3.scale.category10();
+	
+function buttonSearch() {
+	Xbutton = document.getElementById("searchButton");
+	Xfieldset = document.getElementById("infoField");
+	XfieldsetStatus = Xfieldset.hidden;
+	if (XfieldsetStatus == true) {
+		Xfieldset.hidden = false;
+		Xbutton.textContent = "Click to collapse features";
+		Xbutton.style.background = "DarkSeaGreen";
+		Xbutton.style.color = "Black";
+	} else if (XfieldsetStatus == false) {
+		Xfieldset.hidden = true;
+		Xbutton.textContent = "Click to expand features";
+		Xbutton.style.background = "Azure";
+		Xbutton.style.color = "Black";		
+	}
+}
+function interactiveSearch() {
+	Xbutton = document.getElementById("interactiveButton");
+	Xfieldset = document.getElementById("interactiveField");
+	XfieldsetStatus = Xfieldset.hidden;
+	if (XfieldsetStatus == true) {
+		Xfieldset.hidden = false;
+		Xbutton.textContent = "Click to collapse details";
+		Xbutton.style.background = "DarkSeaGreen";
+		Xbutton.style.color = "Black";
+	} else if (XfieldsetStatus == false) {
+		Xfieldset.hidden = true;
+		Xbutton.textContent = "Click for interactive features";
+		Xbutton.style.background = "Azure";
+		Xbutton.style.color = "Black";		
+	}
+}
+function hideLegend() {
+	Xbutton = document.getElementById("legendButton");
+	Xfieldset = document.getElementById("legendField");
+	XfieldsetStatus = Xfieldset.hidden;
+	if (XfieldsetStatus == true) {
+		Xfieldset.hidden = false;
+		Xbutton.textContent = "Hide Legend";
+		Xbutton.style.background = "DarkSeaGreen";
+		Xbutton.style.color = "Black";
+	} else if (XfieldsetStatus == false) {
+		Xfieldset.hidden = true;
+		Xbutton.textContent = "Show Legend";
+		Xbutton.style.background = "Azure";
+		Xbutton.style.color = "Black";		
+	}
+}	
+	
+d3.csv(csv_force, function(error, dataset) {
+	createForceDiagram(dataset);	
+}
+	
+function createForceDiagram(dataset) {
+	
+	
+	
+}
+       
 var focus_node = null, highlight_node = null;
 
 var text_center = false;
