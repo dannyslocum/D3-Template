@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <meta charset="utf-8">
 
@@ -281,4 +282,289 @@
 			sankey.relayout();
 			link.attr("d", path);
 		}
+=======
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Sankey Diagram</title>
+
+<style>
+	body{
+		padding: 10px;
+		min-width: 600px;
+		max-width: 1200px;
+		}
+	#chart {
+		height: 500px;
+		font: 13px Arial;
+		}
+	.node rect {
+		fill-opacity: 0.75;
+		shape-rendering: crispEdges;
+		stroke-width: 0;
+		cursor: move;
+		}
+	.node text {
+		fill: white;
+		}
+	.link {
+		fill: none;
+		stroke: #000;
+		stroke-opacity: 0.25;
+		}
+	.link:hover {
+		stroke-opacity: 0.5 !important;
+		}
+	div.tooltip {
+		position: absolute;
+		width: 400px;
+		padding: 2px;
+		font: 16px Arial;
+		background: lightsteelblue;
+		border: 0px;
+		border-radius: 8px;
+		pointer-events: none;
+		}
+	div.tooltip2 {
+		position: absolute;
+		padding: 2px;
+		font: 16px Arial;
+		background: white;
+		border: 0px;
+		border-radius: 8px;
+		pointer-events: all;
+		overflow: auto;
+		}		
+</style>
+
+</head>
+
+
+<body	bgcolor="#666">
+	<h3	style="background: #666; color: red; margin-top: 0px; top: 2px; left: 45%; position: fixed">
+		Classification
+	</h3>
+	<h1 style="margin: 10px; color: white">
+		Title
+	</h1>
+	<fieldset	id="infoField"	style="font: 16px Arial; height: 90px; border-radius: 8px; width: 350px; float: left; margin-top: 10px; margin-right: 50%; left: 5px; overflow: auto; background: white">
+		<div style="float: left; margin: 10px;">
+			<br>
+			<b>Search: <b>
+			<input id="search_features"	list="datalist_features"	type="search"	placeholder="Enter an entity name...">
+			<datalist	id="datalist_features"></datalist>
+			<button	id="datalist_features">Submit</button>
+		</div>
+		<br><br>
+	</fieldset>
+
+	<div	id="sankeyChart"	style="margin: 10px; float: left; border: solid; background: #333;">
+		<b style="color: lightblue; font-size: 24px;">Column 1</b>
+		<b style="color: #333; font-size: 24px;">-----------------------------------------</b>
+		<b style="color: lightblue; font-size: 24px;">Column 2</b>
+		<b style="color: #333; font-size: 24px;">-----------------------------------------</b>		
+		<b style="color: lightblue; font-size: 24px;">Column 3</b>
+		<br><br>
+	</div>
+	
+	<script src="d3.v3.min.js"></script>
+	<script src="sankey_sort.js"></script>
+	
+	<script>
+	
+		var margin = {top: 6, right: 1, bottom: 6, left: 1},
+			width = 1000,
+			height = 1500,
+			node_color = "lightgrey";
+			
+		var hoverBox = d3.select("sankeyChart").append("div")
+			.attr("class", "tooltip")
+			.style("opacity", 0);
+			
+		var hoverBox2 = d3.select("sankeyChart").append("div")
+			.attr("class", "tooltip2")
+			.style("opacity", 1)
+			.style("left", 375 + "px")
+			.style("top", 88 + "px")
+			.style("height", 100 + "px")
+			.style("width", 660 + "px")
+			.html(
+				"<strong style='color: black'>Diagram Details:</strong><br>"
+				+ "<span style='color: black'>" + "> Use the search selections to filter and locate specific information within the diagram." + "</span><br>"
+				+ "<span style='color: black'>" + "> Double-click on a node to view its dependencies. Click on it again to disable." + "</span><br>"
+				+ "<span style='color: black'>" + "> Hover over a node or path for basic information." + "</span><br>"
+				+ "<span style='color: black'>" + "> Click on a node or path to view all of its available information." + "</span><br>"		
+			);
+			
+		var svg = d3.select("#sankeyChart").append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+				.attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+				
+		var sankey = d3.sankey()
+			.nodeWidth(20)
+			.nodePadding(10)
+			.size([width, height]);
+			
+		var path = sankey.link();
+		
+		var colors = [
+			'name',
+			'name',
+			'name',
+			];
+		var colors20 = d3.scale.category10();
+		
+		d3.csv('datafile.csv', function(error, dataset) {
+			data = {"nodes" : [], "links" : []};
+			var status = [],
+				featuresAll = [];
+				
+			dataset.forEach(function(d) {
+				if (d.name != "") { 
+					data.nodes.push({ "name": d.name, "id": d.id, "description": d.description });
+					if (featuresAll.indexOf(d.name) == -1) { featuresAll.push(d.name); }
+					if (status.indexOf(d.id) == -1) { status.push(d.id); }
+				}
+				if (d.source != "") {
+					data.links.push({ "source": d.source, "target": d.target, "value": +d.value});
+				}
+			});
+			
+		
+		});
+		
+		var nodeMap = [];
+		data.nodes.forEach(function(d) {nodeMap.push( d.name )});
+		data.links.forEach(function(d) {
+			d.source = nodeMap.indexOf(d.source);
+			d.target = nodeMap.indexOf(d.target);
+			return;
+		});
+		
+		sankey
+			.nodes(data.nodes)
+			.links(data.links)
+			.layout(32);
+			
+		var pathClick = "";
+		
+		var link = svg.append("g").selectAll(".link")
+			.data(data.links)
+			.enter().append("path")
+				.attr("class", "link")
+				.attr("d", path)
+				.attr("id", function(d,i){
+					d.id = i;
+					return "link-"+i;})
+				.style("stroke", function(link) {return color(link.source, 4) || color(link.target, 1) || "lightgrey";})
+				.style("stroke-width", function(d) {return Math.max(1, d.dy);})
+				.on("mouseover", function(d) {
+					hoverBox.transition()
+						.duration(1000)
+						.style("opacity", 0.9);
+					hoverBox
+						.html(
+							"<strong style='color: red'>Interface: </strong><span style='color: black'>" + " " + d.source.name + "  ----  " + d.target.name + "</span><br>"
+							)
+						.style("left", (d3.event.pageX) + "px")
+						.style("top", (d3.event.pageY - 28) + "px");								
+					})
+				.on("mouseout", function(d) {
+					hoverBox.transition()
+						.duration(500)
+						.style("opacity", 0);			
+					})
+				.on("click", function(d) {
+					var pathCheck = d.source.name + " - " + d.target.name;
+					if (pathClick != pathCheck) {
+						hoverBox2.transition()
+							.duration(1000)
+							.style("opacity", 1);
+						hoverBox2
+							.html(
+								"<strong style='color: black'>Interface: </strong><span style='color: black'>" + " " + d.source.name + "  ----  " + d.target.name + "</span>"
+								+ "<br><strong style='color: black'>Description: </strong><span style='color: black'>" + d.description + "</span>"
+								);
+						
+						pathClick = d.source.name + " - " + d.target.name;
+					} else {
+						hoverBox2.transition()
+							.duration(500)
+						hoverBox2
+							.html(
+								"<strong style='color: black'>Diagram Details:</strong><br>"
+								+ "<span style='color: black'>" + "> Use the search selections to filter and locate specific information within the diagram." + "</span><br>"
+								+ "<span style='color: black'>" + "> Double-click on a node to view its dependencies. Click on it again to disable." + "</span><br>"
+								+ "<span style='color: black'>" + "> Hover over a node or path for basic information." + "</span><br>"
+								+ "<span style='color: black'>" + "> Click on a node or path to view all of its available information." + "</span><br>"		
+								);
+								
+						pathClick = "";
+					} })
+				.sort(function(a,b) {return b.dy - a.dy; });
+				
+		var node = svg.append("g").selectAll(".node")
+			.data(data.nodes)
+			.enter().append("g")
+				.attr("class", "node")
+				.attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")"; })
+				.on("click", nodeSelect)
+				.call(d3.behavior.drag()
+					.origin(function(d) {return d; })
+					.on("dragstart", function() {this.parentNoode.appendChiild(this);})
+					.on("drag", dragmove));
+					
+		nodeRect = node.append("rect")
+			.attr("height", function(d) {return d.dy;})
+			.attr("width", sankey.nodeWidth())
+			.style("fill", node_color)
+			.on("mouseover", function(d) {
+				hoverBox.transition()
+					.duration(500)
+					.style("opacity", 0.9);
+				hoverBox
+					.html(
+						"<strong style='color: red'>Name: </strong><span style='color: black'>" + " " + d.name
+						)
+					.style("left", (d3.event.pageX) + "px")
+					.style("top", (d3.event.pageY - 28) + "px");					
+				})
+			.on("mouseout", function(d) {
+				hoverBox.transition()
+					.duration(500)
+					.style("opacity", 0);			
+				});
+				
+		node.append("text")
+			.attr("x", -6)
+			.attr("y", function(d) {return d.dy / 2; })
+			.attr("dy", ".35em")
+			.attr("text-anchor", "end")
+			.attr("transform", null)
+			.text(function(d) {return d.name;})
+			.filter(function(d) {return d.x < width / 2;})
+			.attr("x", 6 + sankey.nodeWidth())
+			.attr("text-anchor", "start");
+			
+		searchFeatures();
+		
+		function color(node, depth) {
+			var id = node.name;
+			if (colors.indexOf( id ) > -1) {
+				return colors20(id) 
+			} else if {depth > 0 && node.targetLinks && node.targetLinks.length == 1) {
+				return color(node.targetLinks[0].source, depth-1);
+			} else { return null; }
+		}
+		
+		function dragmove(d) {
+			d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.events.y))) + ")");
+			sankey.relayout();
+			link.attr("d", path);
+		}
+>>>>>>> 883afa8137bd4150f9afe2d1f9dee144892cf921
 </body>
